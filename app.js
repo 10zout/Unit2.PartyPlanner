@@ -3,12 +3,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const partyListContainer = document.getElementById('party-list-container');
     const partyForm = document.getElementById('party-form');
 
-    // Fetch and display all parties
     async function fetchParties() {
         try {
             const response = await fetch(baseUrl);
             const result = await response.json();
-            console.log('API response:', result); // Log the response to inspect it
+            console.log('API response:', result); 
             if (result.success && Array.isArray(result.data)) {
                 renderPartyGroups(result.data);
             } else {
@@ -19,12 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Render party groups
     function renderPartyGroups(parties) {
-        // Clear existing content
         partyListContainer.innerHTML = '';
 
-        // Group parties by name
         const groupedParties = {};
         parties.forEach(party => {
             if (!groupedParties[party.name]) {
@@ -33,7 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
             groupedParties[party.name].push(party);
         });
 
-        // Create and append groups
         for (const groupName in groupedParties) {
             const groupDiv = document.createElement('div');
             groupDiv.classList.add('party-group');
@@ -57,12 +52,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Add a new party
     partyForm.addEventListener('submit', async (event) => {
         event.preventDefault();
         const name = document.getElementById('name').value;
         const description = document.getElementById('description').value;
-        const date = new Date(document.getElementById('date').value).toISOString(); // Convert date to ISO-8601 format
+        const date = new Date(document.getElementById('date').value).toISOString(); 
         const location = document.getElementById('location').value;
 
         try {
@@ -75,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             const result = await response.json();
             if (result.success) {
-                fetchParties(); // Refresh the list to include the new party
+                fetchParties(); 
                 partyForm.reset();
             } else {
                 console.error('Error adding party:', result.error);
@@ -85,18 +79,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Delete a party
-    window.deleteParty = async function(id) { // Attach deleteParty to the window object
+    window.deleteParty = async function(id) { 
         try {
             await fetch(`${baseUrl}/${id}`, {
                 method: 'DELETE'
             });
-            fetchParties(); // Refresh the list after deletion
+            fetchParties();
         } catch (error) {
             console.error('Error deleting party:', error);
         }
     }
 
-    // Initial fetch
     fetchParties();
 });
